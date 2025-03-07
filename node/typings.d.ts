@@ -101,6 +101,7 @@ interface CostCenterInput {
   marketingTags?: string[]
   user?: B2BCustomerInput
   sellers?: Seller[]
+  collections?: string[]
 }
 
 interface CostCenterInputWithId {
@@ -187,6 +188,8 @@ interface CostCenter {
   phoneNumber?: string
   businessDocument?: string
   customFields: CustomField[]
+  collections: [CollectionInput]
+
 }
 
 interface Address {

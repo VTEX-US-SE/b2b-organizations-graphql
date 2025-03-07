@@ -420,6 +420,7 @@ type CostCenter {
   customFields: [CustomField]
   stateRegistration: String
   sellers: [Seller]
+  collections: [Collection]
 }
 
 type Address {
@@ -604,6 +605,7 @@ input CostCenterInput {
   businessDocument: String
   customFields: [CustomFieldInput]
   stateRegistration: String
+  collections: [CollectionInput]
 }
 
 input PermissionsInput {
