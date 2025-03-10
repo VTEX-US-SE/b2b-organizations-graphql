@@ -13,6 +13,7 @@ import type {
 import GraphQLError, { getErrorMessage } from '../../utils/GraphQLError'
 import checkConfig from '../config'
 import { organizationStatus } from '../fieldResolvers'
+import { getCostCenters } from './CostCenters'
 
 const getWhereByStatus = ({ status }: { status: string[] }) => {
   const whereArray = []
@@ -100,6 +101,16 @@ const Organizations = {
         id,
       })
 
+      //The costCenter data is not registered for organizations.
+      // So we are add it here.
+      const costCenterWithCollection: any = await getCostCenters({
+        id,
+        masterdata,
+        page: 1,
+        pageSize: 25
+      })
+
+      org.costCenters = costCenterWithCollection?.data || [];
       return {
         ...org,
         // the previous data registered doesn't have this propertty on masterdata

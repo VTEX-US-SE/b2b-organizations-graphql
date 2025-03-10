@@ -153,7 +153,7 @@ interface Organization {
   name: string
   tradeName?: string
   collections: Collection[]
-  costCenters: string[]
+  costCenters: CostCenter[]
   paymentTerms: PaymentTerm[]
   priceTables?: string[]
   permissions?: Permissions
@@ -188,7 +188,7 @@ interface CostCenter {
   phoneNumber?: string
   businessDocument?: string
   customFields: CustomField[]
-  collections: [CollectionInput]
+  collections?: [CollectionInput]
 
 }
 

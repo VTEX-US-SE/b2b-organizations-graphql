@@ -394,7 +394,7 @@ type Organization {
   customFields: [CustomField]
   permissions: Permissions
   salesChannel: String
-  costCenters: [ID]
+  costCenters: [CostCenter]
   status: String
   created: String
 }
