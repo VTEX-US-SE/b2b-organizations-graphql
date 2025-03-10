@@ -118,7 +118,7 @@ const Organizations = {
           sortOrder: 'ASC',
           sortedBy: 'id'
         })
-        org.costCenters = costCenterWithCollection?.data || [];
+        org.costCentersObj = costCenterWithCollection?.data || [];
       } catch (e) {
         console.log(e)
       }
@@ -129,7 +129,7 @@ const Organizations = {
         // so we need to add it to the response
         permissions: org.permissions ?? { createQuote: true },
       }
-      console.log("orgToReturn", orgToReturn)
+      console.log("orgToReturn", JSON.stringify(orgToReturn, null, 2));
       return orgToReturn
     } catch (error) {
       logger.error({ error, message: 'getOrganizationById-error' })
