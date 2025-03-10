@@ -30,7 +30,8 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-vtex": "^2.1.0",
     "typescript": "3.9.7",
-    "vtex.storefront-permissions": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.storefront-permissions@1.35.3/public/@types/vtex.storefront-permissions"
+    "vtex.b2b-organizations-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.b2b-organizations-graphql@0.63.4/public/@types/vtex.b2b-organizations-graphql",
+    "vtex.storefront-permissions": "https://dev2--demob2bstore.myvtex.com/_v/private/typings/linked/v1/vtex.storefront-permissions@1.45.2+build1741625016/public/@types/vtex.storefront-permissions"
   },
   "scripts": {
     "lint": "tsc --noEmit && tslint -c tslint.json './**/*.ts'",

@@ -101,6 +101,7 @@ interface CostCenterInput {
   marketingTags?: string[]
   user?: B2BCustomerInput
   sellers?: Seller[]
+  collections?: Collection[]
 }
 
 interface CostCenterInputWithId {
@@ -153,6 +154,7 @@ interface Organization {
   tradeName?: string
   collections: Collection[]
   costCenters: string[]
+  costCentersObj: CostCenter[]
   paymentTerms: PaymentTerm[]
   priceTables?: string[]
   permissions?: Permissions
@@ -187,6 +189,7 @@ interface CostCenter {
   phoneNumber?: string
   businessDocument?: string
   customFields: CustomField[]
+  collections?: [CollectionInput]
 }
 
 interface Address {

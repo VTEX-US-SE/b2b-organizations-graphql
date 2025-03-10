@@ -13,6 +13,7 @@ import type {
 import GraphQLError, { getErrorMessage } from '../../utils/GraphQLError'
 import checkConfig from '../config'
 import { organizationStatus } from '../fieldResolvers'
+import { getCostCenters } from './CostCenters'
 
 const getWhereByStatus = ({ status }: { status: string[] }) => {
   const whereArray = []
@@ -90,6 +91,8 @@ const Organizations = {
       vtex: { logger },
     } = ctx
 
+    console.log("Getting organization on Graphql")
+
     // create schema if it doesn't exist
     await checkConfig(ctx)
 
@@ -100,12 +103,34 @@ const Organizations = {
         id,
       })
 
-      return {
+      console.log("getCostCenters", getCostCenters)
+
+      // The costCenter data is not registered for organizations.
+      // So we are add it here.
+
+      try {
+        const costCenterWithCollection: any = await getCostCenters({
+          id,
+          masterdata,
+          page: 1,
+          pageSize: 25,
+          search: '',
+          sortOrder: 'ASC',
+          sortedBy: 'id'
+        })
+        org.costCenters = costCenterWithCollection?.data || [];
+      } catch (e) {
+        console.log(e)
+      }
+
+      const orgToReturn = {
         ...org,
         // the previous data registered doesn't have this propertty on masterdata
         // so we need to add it to the response
         permissions: org.permissions ?? { createQuote: true },
       }
+      console.log("orgToReturn", orgToReturn)
+      return orgToReturn
     } catch (error) {
       logger.error({ error, message: 'getOrganizationById-error' })
       throw new GraphQLError(getErrorMessage(error))
