@@ -3914,9 +3914,13 @@ vary@^1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
-"vtex.storefront-permissions@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.storefront-permissions@1.35.3/public/@types/vtex.storefront-permissions":
-  version "1.35.3"
-  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.storefront-permissions@1.35.3/public/@types/vtex.storefront-permissions#58d27d180d75da71e43c6d6059f7191002c5f06b"
+"vtex.b2b-organizations-graphql@http://vtex.vtexassets.com/_v/public/typings/v1/vtex.b2b-organizations-graphql@0.63.4/public/@types/vtex.b2b-organizations-graphql":
+  version "0.63.4"
+  resolved "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.b2b-organizations-graphql@0.63.4/public/@types/vtex.b2b-organizations-graphql#0e6351790246bd525a69c5d6924089a030aaba7f"
+
+"vtex.storefront-permissions@https://dev2--demob2bstore.myvtex.com/_v/private/typings/linked/v1/vtex.storefront-permissions@1.45.2+build1741625016/public/@types/vtex.storefront-permissions":
+  version "1.45.2"
+  resolved "https://dev2--demob2bstore.myvtex.com/_v/private/typings/linked/v1/vtex.storefront-permissions@1.45.2+build1741625016/public/@types/vtex.storefront-permissions#e311f119f110b9dd99cc60844fca65743382ba9f"
 
 w3c-hr-time@^1.0.2:
   version "1.0.2"

@@ -8,7 +8,7 @@ import GraphQLError, { getErrorMessage } from '../../utils/GraphQLError'
 import checkConfig from '../config'
 import Organizations from './Organizations'
 
-const getCostCenters = async ({
+export const getCostCenters = async ({
   id,
   masterdata,
   page,
