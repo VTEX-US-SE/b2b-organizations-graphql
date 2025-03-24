@@ -504,7 +504,7 @@ const Users = {
     ctx: Context
   ) => {
     const {
-      clients: { storefrontPermissions: storefrontPermissionsClient },
+      clients: { storefrontPermissions: storefrontPermissionsClient, audit },
       vtex: { adminUserAuthToken, logger, sessionData, storefrontPermissions },
     } = ctx as any
 
@@ -538,10 +538,22 @@ const Users = {
       userId,
     }
 
+    const caller = (ctx as any)['x-vtex-caller'] as string ?? ''
+
     return storefrontPermissionsClient
       .addUser(fields)
       .then((result: any) => {
         sendAddUserMetric(ctx, logger, ctx.vtex.account, fields)
+        audit.sendEvent({
+          subjectId: 'add-user-event',
+          operation: 'ADD_USER',
+          authorId: caller,
+          meta: {
+            entityName: 'AddUser',
+            entityAfterAction: JSON.stringify(fields),
+            remoteIpAddress: ctx.ip,
+        },
+        })
 
         return result.data.addUser
       })
