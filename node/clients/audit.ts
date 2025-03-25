@@ -1,19 +1,27 @@
 import type { InstanceOptions, IOContext } from '@vtex/api'
-import { JanusClient } from '@vtex/api'
+import { ExternalClient } from '@vtex/api'
 
-import { withAuthToken } from './utils'
 
-interface AuditClientInterface {
-  sendEvent: (
-    auditEntry: AuditEntry,
-    sessionMeta: any
-  ) => Promise<void>
-}
+// interface AuditClientInterface {
+//   sendEvent: (
+//     auditEntry: AuditEntry,
+//     sessionMeta: any
+//   ) => Promise<void>
+// }
 
-export class AuditClient extends JanusClient implements AuditClientInterface {
+export class AuditClient extends ExternalClient {
   constructor(ctx: IOContext, options?: InstanceOptions) {
-    super(ctx, { headers: withAuthToken(options)(ctx), ...options })
+    super("http://analytics.vtex.com", ctx, { 
+      ...options,
+      headers: {
+        'Proxy-Authorization': ctx.adminUserAuthToken || "",
+        'VtexIdClientAutCookie': ctx.adminUserAuthToken || "",
+        'Authorization': ctx.authToken,
+        'X-Vtex-Use-Https': 'true'
+      }
+    })
   }
+
 
   public async sendEvent(
     auditEntry: AuditEntry,
@@ -45,31 +53,32 @@ export class AuditClient extends JanusClient implements AuditClientInterface {
 
     try {
       await this.http.post(
-        `https://analytics.vtex.com/api/audit/events?an=${account}`,
-        auditEvent,
-        { headers: { 'content-type': 'application/json' } }
+        `http://analytics.vtex.com/api/audit/events?an=${account}`,
+        auditEvent
       )
     } catch (error) {
-        console.log({
-            message: `AUDIT_CLIENT_ERROR: ${operation} failed on ${sessionMeta.screen} screen.`,
-            action: {
-              authorId,
-              entityBeforeAction: meta.entityBeforeAction,
-              entityAfterAction: meta.entityAfterAction
-            },
-            code: `${operation}_AUDIT_FAILED`,
-            error,
-          })
-      logger.error({
-        message: `AUDIT_CLIENT_ERROR: ${operation} failed on ${sessionMeta.screen} screen.`,
-        action: {
-          authorId,
-          entityBeforeAction: meta.entityBeforeAction,
-          entityAfterAction: meta.entityAfterAction
-        },
-        code: `${operation}_AUDIT_FAILED`,
-        error,
-      })
+      console.log(sessionMeta, logger)
+      console.log("error ------", error)
+      //   console.log({
+      //       message: `AUDIT_CLIENT_ERROR: ${operation} failed on ${sessionMeta.screen} screen.`,
+      //       action: {
+      //         authorId,
+      //         entityBeforeAction: meta.entityBeforeAction,
+      //         entityAfterAction: meta.entityAfterAction
+      //       },
+      //       code: `${operation}_AUDIT_FAILED`,
+      //       error,
+      //     })
+      // logger.error({
+      //   message: `AUDIT_CLIENT_ERROR: ${operation} failed on ${sessionMeta.screen} screen.`,
+      //   action: {
+      //     authorId,
+      //     entityBeforeAction: meta.entityBeforeAction,
+      //     entityAfterAction: meta.entityAfterAction
+      //   },
+      //   code: `${operation}_AUDIT_FAILED`,
+      //   error,
+      // })
     }
   }
 }

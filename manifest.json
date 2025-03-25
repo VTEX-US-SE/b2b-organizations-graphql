@@ -80,7 +80,7 @@
       "name": "outbound-access",
       "attrs": {
         "host": "analytics.vtex.com",
-        "path": "*"
+        "path": "/api/audit/events"
       }
     },
     {
