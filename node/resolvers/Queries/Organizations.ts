@@ -123,14 +123,12 @@ const Organizations = {
         console.log(e)
       }
 
-      const orgToReturn = {
+      return {
         ...org,
         // the previous data registered doesn't have this propertty on masterdata
         // so we need to add it to the response
         permissions: org.permissions ?? { createQuote: true },
       }
-      console.log("orgToReturn", JSON.stringify(orgToReturn, null, 2));
-      return orgToReturn
     } catch (error) {
       logger.error({ error, message: 'getOrganizationById-error' })
       throw new GraphQLError(getErrorMessage(error))
