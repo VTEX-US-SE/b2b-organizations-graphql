@@ -37,9 +37,8 @@ const CostCenters = {
   ) => {
     const {
       vtex,
-      vtex: { logger },
+      vtex: { logger, adminUserAuthToken },
       clients: { audit },
-      adminUserAuthToken,
     } = ctx as any
 
     // create schema if it doesn't exist
@@ -223,7 +222,7 @@ const CostCenters = {
   deleteCostCenter: async (_: void, { id }: { id: string }, ctx: Context) => {
     const {
       clients: { masterdata, audit },
-      adminUserAuthToken,
+      vtex: { adminUserAuthToken },
     } = ctx as any
 
     try {
@@ -254,7 +253,7 @@ const CostCenters = {
   deleteOrganization: async (_: void, { id }: { id: string }, ctx: Context) => {
     const {
       clients: { masterdata, audit },
-      adminUserAuthToken,
+      vtex: { adminUserAuthToken },
     } = ctx as any
 
     try {
@@ -301,8 +300,7 @@ const CostCenters = {
   ) => {
     const {
       clients: { masterdata, audit },
-      vtex: { logger },
-      adminUserAuthToken,
+      vtex: { logger, adminUserAuthToken },
     } = ctx as any
 
     // create schema if it doesn't exist

@@ -94,7 +94,7 @@ const createOrganization = async (
 }> => {
   const {
     clients: { masterdata, audit },
-    adminUserAuthToken,
+    vtex: { adminUserAuthToken },
   } = ctx as any
 
   const organization = {
@@ -374,8 +374,7 @@ const Organizations = {
   ) => {
     const {
       clients: { storefrontPermissions, mail, audit },
-      vtex: { logger },
-      adminUserAuthToken,
+      vtex: { logger, adminUserAuthToken },
     } = ctx as any
 
     // create schema if it doesn't exist
@@ -680,8 +679,7 @@ const Organizations = {
   ) => {
     const {
       clients: { storefrontPermissions, mail, masterdata, audit },
-      vtex: { logger },
-      adminUserAuthToken,
+      vtex: { logger, adminUserAuthToken }
     } = ctx as any
 
     // create schema if it doesn't exist
@@ -713,32 +711,6 @@ const Organizations = {
           storefrontPermissions,
         }).organizationStatusChanged(name, id, status)
       }
-
-      const { sub } = jwtDecode(adminUserAuthToken) as any
-
-      audit.sendEvent({
-        subjectId: 'update-org-event',
-        operation: 'UPDATE_ORG',
-        authorId: sub || '',
-        meta: {
-          entityName: 'UpdateOrg',
-          entityBeforeAction: JSON.stringify(currentOrganizationData),
-          entityAfterAction: JSON.stringify({
-            id,
-            name,
-            tradeName,
-            status,
-            collections,
-            paymentTerms,
-            priceTables,
-            customFields,
-            salesChannel,
-            sellers,
-            permissions,
-          }),
-          remoteIpAddress: ctx.ip,
-        },
-      })
     } catch (error) {
       logger.warn({
         error,
@@ -770,6 +742,33 @@ const Organizations = {
         account: ctx.vtex.account,
         currentOrganizationData,
         updatedProperties: fields,
+      })
+
+      
+      const { sub } = jwtDecode(adminUserAuthToken) as any
+
+      audit.sendEvent({
+        subjectId: 'update-org-event',
+        operation: 'UPDATE_ORG',
+        authorId: sub || '',
+        meta: {
+          entityName: 'UpdateOrg',
+          entityBeforeAction: JSON.stringify(currentOrganizationData),
+          entityAfterAction: JSON.stringify({
+            id,
+            name,
+            tradeName,
+            status,
+            collections,
+            paymentTerms,
+            priceTables,
+            customFields,
+            salesChannel,
+            sellers,
+            permissions,
+          }),
+          remoteIpAddress: ctx.ip,
+        },
       })
 
       return { status: 'success', message: '' }
