@@ -1,3 +1,5 @@
+import jwtDecode from 'jwt-decode'
+
 import type { Seller } from '../../clients/sellers'
 import {
   ORGANIZATION_DATA_ENTITY,
@@ -91,8 +93,9 @@ const createOrganization = async (
   DocumentId: string
 }> => {
   const {
-    clients: { masterdata },
-  } = ctx
+    clients: { masterdata, audit },
+    adminUserAuthToken,
+  } = ctx as any
 
   const organization = {
     id,
@@ -110,11 +113,26 @@ const createOrganization = async (
     permissions: { createQuote: true },
   }
 
-  return masterdata.createDocument({
-    dataEntity: ORGANIZATION_DATA_ENTITY,
-    fields: organization,
-    schema: ORGANIZATION_SCHEMA_VERSION,
-  })
+  const { sub } = jwtDecode(adminUserAuthToken) as any
+
+  return masterdata
+    .createDocument({
+      dataEntity: ORGANIZATION_DATA_ENTITY,
+      fields: organization,
+      schema: ORGANIZATION_SCHEMA_VERSION,
+    })
+    .then(() => {
+      audit.sendEvent({
+        subjectId: 'create-org-event',
+        operation: 'CREATE_ORG',
+        authorId: sub || '',
+        meta: {
+          entityName: 'CreateOrg',
+          entityAfterAction: JSON.stringify(organization),
+          remoteIpAddress: ctx.ip,
+        },
+      })
+    })
 }
 
 const findPaymentTerms = async (paymentTermNames: string[], ctx: Context) => {
@@ -355,9 +373,10 @@ const Organizations = {
     ctx: Context
   ) => {
     const {
-      clients: { storefrontPermissions, mail },
+      clients: { storefrontPermissions, mail, audit },
       vtex: { logger },
-    } = ctx
+      adminUserAuthToken,
+    } = ctx as any
 
     // create schema if it doesn't exist
     await checkConfig(ctx)
@@ -434,6 +453,19 @@ const Organizations = {
           mail,
         }).organizationCreated(name)
       }
+
+      const { sub } = jwtDecode(adminUserAuthToken) as any
+
+      audit.sendEvent({
+        subjectId: 'create-org-event',
+        operation: 'CREATE_ORG',
+        authorId: sub || '',
+        meta: {
+          entityName: 'CreateOrg',
+          entityAfterAction: JSON.stringify(organization),
+          remoteIpAddress: ctx.ip,
+        },
+      })
 
       return {
         costCenterId: costCenterResult[0].id,
@@ -647,9 +679,10 @@ const Organizations = {
     ctx: Context
   ) => {
     const {
-      clients: { storefrontPermissions, mail, masterdata },
+      clients: { storefrontPermissions, mail, masterdata, audit },
       vtex: { logger },
-    } = ctx
+      adminUserAuthToken,
+    } = ctx as any
 
     // create schema if it doesn't exist
     await checkConfig(ctx)
@@ -680,6 +713,32 @@ const Organizations = {
           storefrontPermissions,
         }).organizationStatusChanged(name, id, status)
       }
+
+      const { sub } = jwtDecode(adminUserAuthToken) as any
+
+      audit.sendEvent({
+        subjectId: 'update-org-event',
+        operation: 'UPDATE_ORG',
+        authorId: sub || '',
+        meta: {
+          entityName: 'UpdateOrg',
+          entityBeforeAction: JSON.stringify(currentOrganizationData),
+          entityAfterAction: JSON.stringify({
+            id,
+            name,
+            tradeName,
+            status,
+            collections,
+            paymentTerms,
+            priceTables,
+            customFields,
+            salesChannel,
+            sellers,
+            permissions,
+          }),
+          remoteIpAddress: ctx.ip,
+        },
+      })
     } catch (error) {
       logger.warn({
         error,

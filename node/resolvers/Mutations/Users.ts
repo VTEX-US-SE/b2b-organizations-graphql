@@ -1,3 +1,5 @@
+import jwtDecode from 'jwt-decode'
+
 import { MessageSFPUserAddError, StatusAddUserError } from '../../constants'
 import GraphQLError, { getErrorMessage } from '../../utils/GraphQLError'
 import type { ImpersonateMetricParams } from '../../utils/metrics/impersonate'
@@ -385,6 +387,7 @@ const Users = {
 
         if (!user) {
           logger.error({ message: 'User not found' })
+
           return { status: 'error', message: 'User not found' }
         }
 
@@ -443,7 +446,11 @@ const Users = {
     ctx: Context
   ) => {
     const {
-      clients: { events, storefrontPermissions: storefrontPermissionsClient },
+      clients: {
+        events,
+        storefrontPermissions: storefrontPermissionsClient,
+        audit,
+      },
       vtex: { adminUserAuthToken, logger, sessionData, storefrontPermissions },
     } = ctx as Context | any
 
@@ -476,6 +483,8 @@ const Users = {
       userId,
     }
 
+    const { sub } = jwtDecode(adminUserAuthToken) as any
+
     return storefrontPermissionsClient
       .deleteUser(fields)
       .then((result: any) => {
@@ -485,6 +494,17 @@ const Users = {
         })
 
         sendRemoveUserMetric(ctx, logger, ctx.vtex.account, fields)
+
+        audit.sendEvent({
+          subjectId: 'remove-user-event',
+          operation: 'REMOVE_USER',
+          authorId: sub || '',
+          meta: {
+            entityName: 'RemoveUser',
+            entityAfterAction: JSON.stringify(fields),
+            remoteIpAddress: ctx.ip,
+          },
+        })
 
         return result.data.deleteUser
       })
@@ -538,7 +558,7 @@ const Users = {
       userId,
     }
 
-    const caller = (ctx as any)['x-vtex-caller'] as string ?? ''
+    const { sub } = jwtDecode(adminUserAuthToken) as any
 
     return storefrontPermissionsClient
       .addUser(fields)
@@ -547,12 +567,12 @@ const Users = {
         audit.sendEvent({
           subjectId: 'add-user-event',
           operation: 'ADD_USER',
-          authorId: caller,
+          authorId: sub || '',
           meta: {
             entityName: 'AddUser',
             entityAfterAction: JSON.stringify(fields),
             remoteIpAddress: ctx.ip,
-        },
+          },
         })
 
         return result.data.addUser
@@ -632,6 +652,7 @@ const Users = {
       clients: {
         masterdata,
         storefrontPermissions: storefrontPermissionsClient,
+        audit,
       },
       vtex: { adminUserAuthToken, logger, sessionData, storefrontPermissions },
     } = ctx as any
@@ -676,10 +697,22 @@ const Users = {
       userId,
     }
 
+    const { sub } = jwtDecode(adminUserAuthToken) as any
+
     return storefrontPermissionsClient
       .updateUser(fields)
       .then((result: any) => {
         sendUpdateUserMetric(ctx, logger, ctx.vtex.account, fields)
+        audit.sendEvent({
+          subjectId: 'update-user-event',
+          operation: 'UPDATE_USER',
+          authorId: sub || '',
+          meta: {
+            entityName: 'UpdateUser',
+            entityAfterAction: JSON.stringify(fields),
+            remoteIpAddress: ctx.ip,
+          },
+        })
 
         return result.data.updateUser
       })

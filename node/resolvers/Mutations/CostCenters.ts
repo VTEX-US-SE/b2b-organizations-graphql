@@ -1,3 +1,5 @@
+import jwtDecode from 'jwt-decode'
+
 import {
   COST_CENTER_DATA_ENTITY,
   ORGANIZATION_DATA_ENTITY,
@@ -36,7 +38,9 @@ const CostCenters = {
     const {
       vtex,
       vtex: { logger },
-    } = ctx
+      clients: { audit },
+      adminUserAuthToken,
+    } = ctx as any
 
     // create schema if it doesn't exist
     await checkConfig(ctx)
@@ -79,7 +83,20 @@ const CostCenters = {
         organizationId,
         costCenter,
         ctx
-      )
+      ).then(() => {
+        const { sub } = jwtDecode(adminUserAuthToken) as any
+
+        audit.sendEvent({
+          subjectId: 'create-cost-center-event',
+          operation: 'CREATE_COST_CENTER',
+          authorId: sub || '',
+          meta: {
+            entityName: 'CreateCostCenter',
+            entityAfterAction: JSON.stringify(costCenter),
+            remoteIpAddress: ctx.ip,
+          },
+        })
+      })
     } catch (error) {
       logger.error({
         error,
@@ -205,13 +222,27 @@ const CostCenters = {
 
   deleteCostCenter: async (_: void, { id }: { id: string }, ctx: Context) => {
     const {
-      clients: { masterdata },
-    } = ctx
+      clients: { masterdata, audit },
+      adminUserAuthToken,
+    } = ctx as any
 
     try {
       await masterdata.deleteDocument({
         dataEntity: COST_CENTER_DATA_ENTITY,
         id,
+      })
+
+      const { sub } = jwtDecode(adminUserAuthToken) as any
+
+      audit.sendEvent({
+        subjectId: 'delete-cost-center-event',
+        operation: 'DELETE_COST_CENTER',
+        authorId: sub || '',
+        meta: {
+          entityName: 'DeleteCostCenter',
+          entityBeforeAction: JSON.stringify(id),
+          remoteIpAddress: ctx.ip,
+        },
       })
 
       return { status: 'success', message: '' }
@@ -222,13 +253,27 @@ const CostCenters = {
 
   deleteOrganization: async (_: void, { id }: { id: string }, ctx: Context) => {
     const {
-      clients: { masterdata },
-    } = ctx
+      clients: { masterdata, audit },
+      adminUserAuthToken,
+    } = ctx as any
 
     try {
       await masterdata.deleteDocument({
         dataEntity: ORGANIZATION_DATA_ENTITY,
         id,
+      })
+
+      const { sub } = jwtDecode(adminUserAuthToken) as any
+
+      audit.sendEvent({
+        subjectId: 'delete-org-event',
+        operation: 'DELETE_ORG',
+        authorId: sub || '',
+        meta: {
+          entityName: 'DeleteOrg',
+          entityBeforeAction: JSON.stringify(id),
+          remoteIpAddress: ctx.ip,
+        },
       })
 
       return { status: 'success', message: '' }
@@ -249,15 +294,16 @@ const CostCenters = {
         businessDocument,
         stateRegistration,
         customFields,
-        collections
+        collections,
       },
     }: { id: string; input: CostCenterInput },
     ctx: Context
   ) => {
     const {
-      clients: { masterdata },
+      clients: { masterdata, audit },
       vtex: { logger },
-    } = ctx
+      adminUserAuthToken,
+    } = ctx as any
 
     // create schema if it doesn't exist
     await checkConfig(ctx)
@@ -279,9 +325,31 @@ const CostCenters = {
           ...((customFields || customFields === '') && {
             customFields,
           }),
-          collections
+          collections,
         },
         id,
+      })
+
+      const { sub } = jwtDecode(adminUserAuthToken) as any
+
+      audit.sendEvent({
+        subjectId: 'create-cost-center-event',
+        operation: 'CREATE_COST_CENTER',
+        authorId: sub || '',
+        meta: {
+          entityName: 'CreateCostCenter',
+          entityBeforeAction: JSON.stringify({
+            name,
+            addresses,
+            paymentTerms,
+            phoneNumber,
+            businessDocument,
+            stateRegistration,
+            customFields,
+            collections,
+          }),
+          remoteIpAddress: ctx.ip,
+        },
       })
 
       return { status: 'success', message: '' }

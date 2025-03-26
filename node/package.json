@@ -9,6 +9,7 @@
     "graphql": "^14.5.0",
     "graphql-tag": "^2.12.6",
     "graphql-tools": "^4.0.6",
+    "jwt-decode": "3.1.2",
     "qs": "^6.9.4",
     "ramda": "^0.25.0"
   },
@@ -18,7 +19,7 @@
     "@types/co-body": "0.0.3",
     "@types/jest": "27.4.1",
     "@types/jsonwebtoken": "^8.5.0",
-    "@types/node": "^12.12.21",
+    "@types/node": "^12.0.0",
     "@types/ramda": "types/npm-ramda#dist",
     "@vtex/api": "6.48.0",
     "@vtex/prettier-config": "^0.3.1",
@@ -30,7 +31,7 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-vtex": "^2.1.0",
     "typescript": "3.9.7",
-    "vtex.b2b-organizations-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.b2b-organizations-graphql@0.64.0/public/@types/vtex.b2b-organizations-graphql",
+    "vtex.b2b-organizations-graphql": "https://audit--demoaccount25.myvtex.com/_v/private/typings/linked/v1/vtex.b2b-organizations-graphql@0.65.0-beta.1+build1743003581/public/@types/vtex.b2b-organizations-graphql",
     "vtex.storefront-permissions": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.storefront-permissions@1.45.2/public/@types/vtex.storefront-permissions"
   },
   "scripts": {
