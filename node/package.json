@@ -31,7 +31,7 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-config-vtex": "^2.1.0",
     "typescript": "3.9.7",
-    "vtex.b2b-organizations-graphql": "https://audit--demoaccount25.myvtex.com/_v/private/typings/linked/v1/vtex.b2b-organizations-graphql@0.65.0-beta.1+build1743003581/public/@types/vtex.b2b-organizations-graphql",
+    "vtex.b2b-organizations-graphql": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.b2b-organizations-graphql@0.64.0/public/@types/vtex.b2b-organizations-graphql",
     "vtex.storefront-permissions": "http://vtex.vtexassets.com/_v/public/typings/v1/vtex.storefront-permissions@1.45.2/public/@types/vtex.storefront-permissions"
   },
   "scripts": {
