@@ -334,10 +334,10 @@ const CostCenters = {
 
       audit.sendEvent({
         subjectId: 'create-cost-center-event',
-        operation: 'CREATE_COST_CENTER',
+        operation: 'UPDATE_COST_CENTER',
         authorId: sub || '',
         meta: {
-          entityName: 'CreateCostCenter',
+          entityName: 'UpdateCostCenter',
           entityBeforeAction: JSON.stringify({
             name,
             addresses,
