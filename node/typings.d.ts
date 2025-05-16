@@ -102,6 +102,7 @@ interface CostCenterInput {
   user?: B2BCustomerInput
   sellers?: Seller[]
   collections?: Collection[]
+  shippingPolicies?:ShippingPolicy[]
 }
 
 interface CostCenterInputWithId {
@@ -298,4 +299,10 @@ interface Result {
   href: string
   id: string
   status: string
+}
+
+interface ShippingPolicy{
+  id:string
+  name:string
+  shippingMethod:string
 }

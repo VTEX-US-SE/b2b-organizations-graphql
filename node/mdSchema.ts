@@ -47,7 +47,8 @@ export const COST_CENTER_FIELDS = [
   'customFields',
   'stateRegistration',
   'sellers',
-  'collections'
+  'collections',
+  'shippingPolicies'
 ]
 export const COST_CENTER_SCHEMA_VERSION = 'v0.0.8'
 
@@ -227,6 +228,10 @@ export const schemas = [
         collections: {
           type: 'array',
           title: 'Collections',
+        },
+        shippingPolicies:{
+          type:['array','null'],
+          title:'Shipping Policies'
         }
       },
       'v-indexed': [

@@ -249,7 +249,8 @@ const CostCenters = {
         businessDocument,
         stateRegistration,
         customFields,
-        collections
+        collections,
+        shippingPolicies
       },
     }: { id: string; input: CostCenterInput },
     ctx: Context
@@ -279,7 +280,8 @@ const CostCenters = {
           ...((customFields || customFields === '') && {
             customFields,
           }),
-          collections
+          ...(Array.isArray(collections) && collections.length > 0 && { collections }),
+          ...(Array.isArray(shippingPolicies) && shippingPolicies.length > 0 && { shippingPolicies }),
         },
         id,
       })
