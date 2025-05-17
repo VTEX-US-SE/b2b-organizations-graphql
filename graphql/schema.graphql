@@ -141,7 +141,7 @@ type GetSellersPaginatedResponse {
 }
 
 type ShippingPolicy{
-  id: String!
+  shippingPolicyId: String!
   name: String!
   shippingMethod: String!
 }
@@ -429,6 +429,7 @@ type CostCenter {
   stateRegistration: String
   sellers: [Seller]
   collections: [Collection]
+  shippingPolicies:[ShippingPolicy]
 }
 
 type Address {
@@ -659,7 +660,7 @@ input PaymentTermInput {
 }
 
 input ShippingPolicyInput{
-  id: String,
+  shippingPolicyId: String,
   name:String,
   shippingMethod:String
 }

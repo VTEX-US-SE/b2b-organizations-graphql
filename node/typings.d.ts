@@ -302,7 +302,7 @@ interface Result {
 }
 
 interface ShippingPolicy{
-  id:string
+  shippingPolicyId:string
   name:string
   shippingMethod:string
 }

@@ -396,7 +396,7 @@ const costCenters = {
 
       const simplifiedShippingPolicies= shippingPolicies.items.map(
         (item: { id: string; name: string; shippingMethod: string }) => ({
-          id: item.id,
+          shippingPolicyId: item.id,
           name: item.name,
           shippingMethod: item.shippingMethod
         })

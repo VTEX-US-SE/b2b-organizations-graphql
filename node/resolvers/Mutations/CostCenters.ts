@@ -280,8 +280,9 @@ const CostCenters = {
           ...((customFields || customFields === '') && {
             customFields,
           }),
-          ...(Array.isArray(collections) && collections.length > 0 && { collections }),
-          ...(Array.isArray(shippingPolicies) && shippingPolicies.length > 0 && { shippingPolicies }),
+          ...(Array.isArray(collections) && { collections }),
+          ...(Array.isArray(shippingPolicies) && { shippingPolicies }),
+
         },
         id,
       })
