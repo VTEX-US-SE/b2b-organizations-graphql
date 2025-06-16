@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.64.0] - 2025-03-21
+### Added
+- Add `notes` when updating organization request document
+
 ## [0.63.4] - 2025-02-21
 
 ### Fixed
