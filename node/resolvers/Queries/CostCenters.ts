@@ -8,7 +8,7 @@ import GraphQLError, { getErrorMessage } from '../../utils/GraphQLError'
 import checkConfig from '../config'
 import Organizations from './Organizations'
 
-const getCostCenters = async ({
+export const getCostCenters = async ({
   id,
   masterdata,
   page,
@@ -377,6 +377,39 @@ const costCenters = {
       throw error
     }
   },
+  getShippingPolicies: async (
+    _: void,
+    __: unknown,
+    ctx: Context
+  ) => {
+    const {
+      clients: { logistics },
+      vtex: { logger },
+    } = ctx
+
+    // create schema if it doesn't exist
+    await checkConfig(ctx)
+
+    try {
+      // Retrieve shipping policies
+      const shippingPolicies = await logistics.listShippingPolicies()
+
+      const simplifiedShippingPolicies= shippingPolicies.items.map(
+        (item: { id: string; name: string; shippingMethod: string }) => ({
+          shippingPolicyId: item.id,
+          name: item.name,
+          shippingMethod: item.shippingMethod
+        })
+      )
+
+      console.log("THE SHIPPING POLICIES DATA: ", JSON.stringify(simplifiedShippingPolicies, null, 2))
+      return simplifiedShippingPolicies
+    } catch (error) {
+      logger.error({ error, message: 'getShippingMethods-error' })
+      throw new GraphQLError(getErrorMessage(error))
+    }
+  }
+
 }
 
 export default costCenters

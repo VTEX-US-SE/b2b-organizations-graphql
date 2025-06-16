@@ -69,6 +69,7 @@ type Query {
     @withSession
     @cacheControl(scope: PRIVATE, maxAge: SHORT)
     @checkUserAccess
+  getShippingPolicies: [ShippingPolicy!]!
   getUsers(organizationId: ID, costCenterId: ID): [B2BUser]
     @withSession
     @checkUserAccess
@@ -137,6 +138,12 @@ type PaginationResponse {
 type GetSellersPaginatedResponse {
   items: [Seller]
   pagination: PaginationResponse
+}
+
+type ShippingPolicy{
+  shippingPolicyId: String!
+  name: String!
+  shippingMethod: String!
 }
 
 type Mutation {
@@ -395,6 +402,7 @@ type Organization {
   permissions: Permissions
   salesChannel: String
   costCenters: [ID]
+  costCentersObj: [CostCenter]
   status: String
   created: String
 }
@@ -420,6 +428,8 @@ type CostCenter {
   customFields: [CustomField]
   stateRegistration: String
   sellers: [Seller]
+  collections: [Collection]
+  shippingPolicies:[ShippingPolicy]
 }
 
 type Address {
@@ -604,6 +614,9 @@ input CostCenterInput {
   businessDocument: String
   customFields: [CustomFieldInput]
   stateRegistration: String
+  collections: [CollectionInput]
+  shippingPolicies: [ShippingPolicyInput]
+
 }
 
 input PermissionsInput {
@@ -644,6 +657,12 @@ input SellerInput {
 input PaymentTermInput {
   id: ID
   name: String
+}
+
+input ShippingPolicyInput{
+  shippingPolicyId: String,
+  name:String,
+  shippingMethod:String
 }
 
 enum CustomFieldType {
