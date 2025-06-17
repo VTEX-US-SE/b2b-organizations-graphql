@@ -7,9 +7,7 @@ export default class Logistics extends JanusClient {
       ...options,
       headers: {
         ...options?.headers,
-        //VtexIdClientAutCookie: ctx.authToken,
-        "X-VTEX-API-AppKey":"vtexappkey-demoaccount17-HKMFKR",
-        "X-VTEX-API-AppToken":"FXCJNAMUNCAEIWWVUVQWIYBDYSOICPOWBXOXRZFDZOLCFUCUASHCJFIVNWJRADBISELHEGJCCVMTGICKAOPHGQKIXSQTUQKMVCHZMFXDVUUITHOYRSOIUURBGHFGQUJO"
+        VtexIdClientAutCookie: ctx.authToken,
       },
     })
   }
